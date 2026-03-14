@@ -167,6 +167,7 @@ model_cache/
 
 # Ignore Chroma vector database
 vector_db/
+vector_db2/
 products_vectorstore/
 
 # And ignore any pickle files made during the course
@@ -215,3 +216,6 @@ week6/*.joblib
 week8/*.pth
 
 week3/datasets/
+
+#ignore duplicated file for practice
+week5/day2 copy.ipynb
