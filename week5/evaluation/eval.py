@@ -12,7 +12,7 @@ from implementation.answer import answer_question, fetch_context
 
 load_dotenv(override=True)
 
-MODEL = "gemma3:1b"
+MODEL = "kamekichi128/qwen3-4b-instruct-2507:latest"
 ollama_base_url = "http://localhost:11434/v1"
 ollama_api_key = os.getenv("OLLAMA_API_KEY")
 ollama = OpenAI(base_url = ollama_base_url, api_key = ollama_api_key)
@@ -159,9 +159,9 @@ Provide detailed feedback and scores from 1 (very poor) to 5 (ideal) for each di
 
     # Call LLM judge with structured outputs (async)
     # judge_response = completion(model=MODEL, messages=judge_messages, response_format=AnswerEval)
-    judge_response = ollama.chat.completions.create(model=MODEL, messages=judge_messages, response_format=AnswerEval)
-
-    answer_eval = AnswerEval.model_validate_json(judge_response.choices[0].message.content)
+    judge_response = ollama.chat.completions.parse(model=MODEL, messages=judge_messages, response_format=AnswerEval)
+    print(judge_response.choices[0].message.parsed)
+    answer_eval = AnswerEval.model_validate_json(judge_response.choices[0].message.parsed)
 
     return answer_eval, generated_answer, retrieved_docs
 
