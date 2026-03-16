@@ -161,7 +161,7 @@ Provide detailed feedback and scores from 1 (very poor) to 5 (ideal) for each di
     # Call LLM judge with structured outputs (async)
     # judge_response = completion(model=MODEL, messages=judge_messages, response_format=AnswerEval)
     judge_response = ollama.chat(model=MODEL, messages=judge_messages, format=AnswerEval.model_json_schema())
-    print(judge_response["message"]["content"])
+    # print(judge_response["message"]["content"])
     answer_eval = AnswerEval.model_validate_json(judge_response["message"]["content"])
 
     return answer_eval, generated_answer, retrieved_docs
