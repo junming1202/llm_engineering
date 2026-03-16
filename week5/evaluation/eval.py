@@ -5,6 +5,7 @@ from litellm import completion
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import ollama
 
 from evaluation.test import TestQuestion, load_tests
 from implementation.answer import answer_question, fetch_context
@@ -12,10 +13,10 @@ from implementation.answer import answer_question, fetch_context
 
 load_dotenv(override=True)
 
-MODEL = "kamekichi128/qwen3-4b-instruct-2507:latest"
-ollama_base_url = "http://localhost:11434/v1"
-ollama_api_key = os.getenv("OLLAMA_API_KEY")
-ollama = OpenAI(base_url = ollama_base_url, api_key = ollama_api_key)
+MODEL = "gemma3:1b"
+# ollama_base_url = "http://localhost:11434/v1"
+# ollama_api_key = os.getenv("OLLAMA_API_KEY")
+# ollama = OpenAI(base_url = ollama_base_url, api_key = ollama_api_key)
 db_name = "vector_db"
 
 
@@ -159,9 +160,9 @@ Provide detailed feedback and scores from 1 (very poor) to 5 (ideal) for each di
 
     # Call LLM judge with structured outputs (async)
     # judge_response = completion(model=MODEL, messages=judge_messages, response_format=AnswerEval)
-    judge_response = ollama.chat.completions.parse(model=MODEL, messages=judge_messages, response_format=AnswerEval)
-    print(judge_response.choices[0].message.parsed)
-    answer_eval = AnswerEval.model_validate_json(judge_response.choices[0].message.parsed)
+    judge_response = ollama.chat(model=MODEL, messages=judge_messages, format=AnswerEval.model_json_schema())
+    print(judge_response["message"]["content"])
+    answer_eval = AnswerEval.model_validate_json(judge_response["message"]["content"])
 
     return answer_eval, generated_answer, retrieved_docs
 
