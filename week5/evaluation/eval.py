@@ -2,7 +2,9 @@ import sys
 import math
 from pydantic import BaseModel, Field
 from litellm import completion
+from openai import OpenAI
 from dotenv import load_dotenv
+import os
 
 from evaluation.test import TestQuestion, load_tests
 from implementation.answer import answer_question, fetch_context
@@ -10,7 +12,10 @@ from implementation.answer import answer_question, fetch_context
 
 load_dotenv(override=True)
 
-MODEL = "gpt-4.1-nano"
+MODEL = "gemma3:1b"
+ollama_base_url = "http://localhost:11434/v1"
+ollama_api_key = os.getenv("OLLAMA_API_KEY")
+ollama = OpenAI(base_url = ollama_base_url, api_key = ollama_api_key)
 db_name = "vector_db"
 
 
@@ -153,7 +158,8 @@ Provide detailed feedback and scores from 1 (very poor) to 5 (ideal) for each di
     ]
 
     # Call LLM judge with structured outputs (async)
-    judge_response = completion(model=MODEL, messages=judge_messages, response_format=AnswerEval)
+    # judge_response = completion(model=MODEL, messages=judge_messages, response_format=AnswerEval)
+    judge_response = ollama.chat.completions.create(model=MODEL, messages=judge_messages, response_format=AnswerEval)
 
     answer_eval = AnswerEval.model_validate_json(judge_response.choices[0].message.content)
 
