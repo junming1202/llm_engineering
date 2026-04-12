@@ -10,7 +10,7 @@ pushover_url = "https://api.pushover.net/1/messages.json"
 class MessagingAgent(Agent):
     name = "Messaging Agent"
     color = Agent.WHITE
-    MODEL = "claude-sonnet-4-5"
+    MODEL = "ollama/gemma4:e4b"
 
     def __init__(self):
         """
@@ -59,6 +59,7 @@ class MessagingAgent(Agent):
             messages=[
                 {"role": "user", "content": user_prompt},
             ],
+            api_base="http://localhost:11434",
         )
         return response.choices[0].message.content
 
