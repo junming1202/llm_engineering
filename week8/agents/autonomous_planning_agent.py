@@ -11,7 +11,7 @@ import json
 class AutonomousPlanningAgent(Agent):
     name = "Autonomous Planning Agent"
     color = Agent.GREEN
-    MODEL = "gpt-5.1"
+    MODEL = "gemma4:e4b"
 
     def __init__(self, collection):
         """
@@ -21,7 +21,7 @@ class AutonomousPlanningAgent(Agent):
         self.scanner = ScannerAgent()
         self.ensemble = EnsembleAgent(collection)
         self.messenger = MessagingAgent()
-        self.openai = OpenAI()
+        self.openai = OpenAI(base_url = "http://localhost:11434/v1", api_key = "ollama")
         self.memory = None
         self.opportunity = None
         self.log("Autonomous Planning Agent is ready")
